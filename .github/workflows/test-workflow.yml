@@ -5,7 +5,6 @@ on:
 
 jobs:
   test-workflow:
-    name: Test Workflow Job
     runs-on: macos-latest
 
     steps:
