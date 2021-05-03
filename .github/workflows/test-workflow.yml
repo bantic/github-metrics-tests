@@ -4,8 +4,7 @@ on:
     types: [opened, ready_for_review, synchronize, labeled]
 
 jobs:
-  test-workflow:
-    name: Test Workflow Job
+  test-workflow-id:
     runs-on: macos-latest
 
     steps:
