@@ -1,0 +1,31 @@
+name: Test Workflow
+on:
+  pull_request:
+    types: [ready_for_review, synchronize, labeled]
+
+jobs:
+  test-workflow:
+    name: Test Workflow Job
+    runs-on: macos-latest
+
+    steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
+        run: echo "$GITHUB_CONTEXT"
+
+      - name: got label
+        if: contains(github.event.pull_request.labels.*.name, 'TEST_WORKFLOW')
+        run: echo 'got label'
+
+      - name: ready
+        if: github.event.action == 'ready_for_review'
+        run: echo 'ready for review'
+
+      - name: not draft
+        if: github.event.pull_request.draft == false
+        run: echo 'not draft'
+
+      - name: combo
+        if: contains(github.event.pull_request.labels.*.name, 'TEST_WORKFLOW') || github.event.action == 'ready_for_review' || github.event.pull_request.draft == false
+        run: echo 'got combo'
