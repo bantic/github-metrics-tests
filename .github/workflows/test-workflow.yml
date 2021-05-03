@@ -7,8 +7,23 @@ jobs:
   test-workflow:
     name: Test Workflow Job
     runs-on: macos-latest
-    if: contains(github.event.pull_request.labels.*.name, 'TEST_WORKFLOW') || github.event.action == 'ready_for_review' || github.event.pull_request.draft == false
 
     steps:
       - name: show github
         run: echo ${{ toJSON(github) }}
+
+      - name: got label
+        if: contains(github.event.pull_request.labels.*.name, 'TEST_WORKFLOW')
+        run: echo 'got label'
+
+      - name: ready
+        if: github.event.action == 'ready_for_review'
+        run: echo 'ready for review'
+
+      - name: not draft
+        if: github.event.pull_request.draft == false
+        run: echo 'not draft'
+
+      - name: combo
+        if: contains(github.event.pull_request.labels.*.name, 'TEST_WORKFLOW') || github.event.action == 'ready_for_review' || github.event.pull_request.draft == false
+        run: echo 'got combo'
