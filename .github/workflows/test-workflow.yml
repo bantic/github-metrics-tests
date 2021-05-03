@@ -9,8 +9,10 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      - name: show github
-        run: echo ${{ toJSON(github) }}
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
+        run: echo "$GITHUB_CONTEXT"
 
       - name: got label
         if: contains(github.event.pull_request.labels.*.name, 'TEST_WORKFLOW')
