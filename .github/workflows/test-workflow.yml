@@ -1,0 +1,14 @@
+name: Test Workflow
+on:
+  pull_request:
+    types: [ready_for_review, synchronize, labeled]
+
+jobs:
+  test-workflow:
+    name: Test Workflow Job
+    runs-on: macos-latest
+    if: contains(github.event.pull_request.labels.*.name, 'TEST_WORKFLOW') || github.event.action == 'ready_for_review' || github.event.pull_request.draft == false
+
+    steps:
+      - name: show github
+        run: echo ${{ toJSON(github) }}
