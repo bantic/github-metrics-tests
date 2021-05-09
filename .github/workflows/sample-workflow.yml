@@ -32,4 +32,4 @@ jobs:
 
       - name: Run on workflow_dispatch
         if: github.event_name == 'workflow_dispatch'
-        run: if [ "${{github.event.inputs.should_pass}}" -ne "true" ]; then exit 1; fi
+        run: if [ "${{github.event.inputs.should_pass}}" = "true" ]; then exit 1; fi
