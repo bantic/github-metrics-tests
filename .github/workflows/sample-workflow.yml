@@ -1,0 +1,35 @@
+name: Sample Workflow
+on:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      should_pass:
+        description: "Whether the run should pass"
+        required: true
+        default: true
+      sleep_seconds:
+        description: "How long to sleep"
+        required: false
+        default: 5
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
+        run: echo "$GITHUB_CONTEXT"
+
+      - name: Randomly fail PR
+        if: github.event_name == 'pull_request'
+        run: if [ "$RANDOM" -gt 16383 ]; then exit 1; fi
+
+      - name: Sleep on workflow_dispatch
+        if: github.event_name == 'workflow_dispatch'
+        run: sleep ${{ github.event.inputs.sleep_seconds }}
+
+      - name: Run on workflow_dispatch
+        if: github.event_name == 'workflow_dispatch'
+        run: if [ "${{github.event.inputs.should_pass}}" -ne "true" ]; exit 1; fi
