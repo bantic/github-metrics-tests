@@ -1,6 +1,10 @@
-name: Sample Workflow
+# Workflow used for generating a set of known workflow run outcomes
+# to be tested by github-metrics.
+# It is not possible to use Github's API to search by time for workflow
+# runs, so, after the github-metrics tests are in place, this run should NEVER be run
+# again, as it would throw off the expectations in those tests.
+name: Workflow Runs Create Test Data
 on:
-  pull_request:
   workflow_dispatch:
     inputs:
       should_pass:
@@ -17,19 +21,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJSON(github) }}
-        run: echo "$GITHUB_CONTEXT"
-
-      - name: Randomly fail PR
-        if: github.event_name == 'pull_request'
-        run: if [ "$RANDOM" -gt 16383 ]; then exit 1; fi
-
-      - name: Sleep on workflow_dispatch
+      - name: Sleep
         if: github.event_name == 'workflow_dispatch'
         run: sleep ${{ github.event.inputs.sleep_seconds }}
 
-      - name: Run on workflow_dispatch
+      - name: Run
         if: github.event_name == 'workflow_dispatch'
         run: if [ "${{github.event.inputs.should_pass}}" != "true" ]; then exit 1; fi
