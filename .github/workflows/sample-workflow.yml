@@ -7,6 +7,10 @@ on:
         description: "Whether the run should pass"
         required: true
         default: true
+      sleep_seconds:
+        description: "How long to sleep"
+        required: false
+        default: 5
 
 jobs:
   run:
@@ -21,6 +25,10 @@ jobs:
       - name: Randomly fail PR
         if: github.event_name == 'pull_request'
         run: if [ "$RANDOM" -gt 16383 ]; then exit 1; fi
+
+      - name: Sleep on workflow_dispatch
+        if: github.event_name == 'workflow_dispatch'
+        run: sleep ${{ github.event.inputs.sleep_seconds }}
 
       - name: Run on workflow_dispatch
         if: github.event_name == 'workflow_dispatch'
