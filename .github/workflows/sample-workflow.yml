@@ -1,0 +1,19 @@
+name: Sample Workflow
+on:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      name:
+        description: "Whether the run should pass"
+        required: true
+        default: true
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
+        run: echo "$GITHUB_CONTEXT"
